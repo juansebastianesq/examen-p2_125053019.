@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  hadoop:
+    build: 
+      context: ./hadoop
+    container_name: hadoop-master
+    volumes:
+      - ./ventas_125053019.csv:/dataset/ventas.csv:ro
+      - ./hadoop:/hadoop
+    networks:
+      - datamart_net
+
+  db:
+    image: postgres:13-alpine
+    container_name: db-datamart
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - datamart_net
+
+  api:
+    build: 
+      context: ./api
+    container_name: api-datamart
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - datamart_net
+
+networks:
+  datamart_net:
+    driver: bridge
+
+volumes:
+  db_data:

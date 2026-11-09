@@ -1,0 +1,8 @@
+ventas_*.csv
+*.csv
+venv/
+.venv/
+.env
+__pycache__/
+*.pyc
+scripts/part-00000
